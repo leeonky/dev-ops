@@ -14,3 +14,8 @@ service: #@ name
 #@ def mysql(ver):
 #@ return extend('mysql' + str(ver))
 #@ end
+
+#@ def node(ver):
+#@ return extend('node' + str(ver))
+#@ end
+
