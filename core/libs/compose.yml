@@ -10,3 +10,7 @@ service: #@ name
 #@ def mockserver():
 #@ return extend('mockserver')
 #@ end
+
+#@ def mysql(ver):
+#@ return extend('mysql' + str(ver))
+#@ end

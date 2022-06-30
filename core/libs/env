@@ -19,8 +19,8 @@ make_buildin_composes() {
 	rm ${env_path}/.*.tmp
 	for service_compose in $(ls "${dev_ops_path}/core/composes/")
 	do
-		( define_ytt_vars; cat "${dev_ops_path}/core/composes/${service_compose}" ) | ytt -f - > \
-			${env_path}/.${service_compose}.tmp
+		( define_ytt_vars; cat "${dev_ops_path}/core/composes/${service_compose}/service.yml" ) | ytt -f - > \
+			${env_path}/.${service_compose}.yml.tmp
 	done
 }
 

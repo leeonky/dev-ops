@@ -3,6 +3,8 @@ version: '3.4'
 services:
   busybox: 
     extends: #@ busybox()
+  mysql:
+    extends: #@ mysql(8)
   mockserver:
     extends: #@ mockserver()
 
