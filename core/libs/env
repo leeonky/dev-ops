@@ -29,9 +29,17 @@ make_docker_compose() {
 	( define_ytt_vars; cat "${dev_ops_path}/core/libs/compose.yml" "${env_path}/services.yml" ) | ytt -f -
 }
 
+make_volumes() {
+	for invoked_service in $(make_docker_compose | grep 'service:' | awk '{print $2}')
+	do
+		if [ -f "${dev_ops_path}/core/composes/${invoked_service}/volume.yml" ]; then
+			cat "${dev_ops_path}/core/composes/${invoked_service}/volume.yml"
+		fi
+	done
+}
+
 execute() {
-	export dev_ops_path=${dev_ops_path}
-	make_docker_compose | ${DOCKER_SUDO_CMD} docker-compose -f /dev/stdin "$@"
+	( make_docker_compose; echo 'volumes:';  make_volumes | grep -v '^volumes:' ) | ${DOCKER_SUDO_CMD} docker-compose -f /dev/stdin "$@"
 }
 
 if [ "${1}" = ggg ]; then

@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  openjdk11:
+    image: openjdk:11-jdk
+    container_name: jdk.${current_env}.${PROJECT_NAME}
+    volumes:
+      - "${root_volume}:${root_point}"
+      - 'gradle-user-home:/tmp/tmp-user/.gradle'
+      - ${work_dir}:${work_point}
+#@ if/end current_env == 'dev':
+    ports:
+      - '20000:80'
+#@ if/end current_env == 'test':
+    ports:
+      - '30000:80'
+    environment:
+      GRADLE_USER_HOME: /tmp/tmp-user/.gradle
+    command: [ 'tail', '-f', '/dev/null' ]
+

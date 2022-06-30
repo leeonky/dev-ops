@@ -7,6 +7,8 @@ services:
     extends: #@ mysql(8)
   mockserver:
     extends: #@ mockserver()
-  node10:
-    extends: #@ node(10)
+  node:
+    extends: #@ node(14)
+  jdk:
+    extends: #@ openjdk(11)
 

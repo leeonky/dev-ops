@@ -5,6 +5,6 @@ services:
     extends: #@ busybox()
   mysql:
     extends: #@ mysql(8)
-  node10:
-    extends: #@ node(10)
+  node:
+    extends: #@ node(14)
 

@@ -19,3 +19,11 @@ service: #@ name
 #@ return extend('node' + str(ver))
 #@ end
 
+#@ def openjdk(ver):
+#@ return extend('openjdk' + str(ver))
+#@ end
+
+#@ def phpmyadmin():
+#@ return extend('phpmyadmin')
+#@ end
+

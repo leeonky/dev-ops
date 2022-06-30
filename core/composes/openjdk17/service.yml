@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  openjdk17:
+    image: openjdk:17-jdk
+    container_name: jdk.${current_env}.${PROJECT_NAME}
+    volumes:
+      - "${root_volume}:${root_point}"
+      - 'gradle-user-home:/tmp/tmp-user/.gradle'
+      - ${work_dir}:${work_point}
+    environment:
+      GRADLE_USER_HOME: /tmp/tmp-user/.gradle
+    command: [ 'tail', '-f', '/dev/null' ]
+

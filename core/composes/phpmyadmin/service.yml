@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  openjdk11:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin.${current_env}.${PROJECT_NAME}
+    environment:
+      UPLOAD_LIMIT: 300M
+    links:
+      - mysql:db
+

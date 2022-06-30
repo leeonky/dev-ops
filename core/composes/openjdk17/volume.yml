@@ -1,0 +1,4 @@
+volumes:
+  gradle-user-home:
+    external: ${gradle_user_home_volume_external}
+    name: ${gradle_user_home_volume}

@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  node15:
+    image: node:15
+    container_name: nodejs.${current_env}.${PROJECT_NAME}
+    volumes:
+      - ${root_volume}:${root_point}
+    expose:
+      - 8080
+#@ if/end current_env == 'dev':
+    ports:
+      - '8080:8080'
+#@ if/end current_env == 'test':
+    ports:
+      - '8080:8080'
+    command: [ 'tail', '-f', '/dev/null' ]
+
