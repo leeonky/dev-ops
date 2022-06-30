@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  morkserver:
+    image: 'mockserver/mockserver:5.13.2'
+    container_name: mock-server.${current_env}.${PROJECT_NAME}
+    expose:
+      - 1080
+#@ if 'dev' == 'dev':
+    ports:
+      - "1080:1080"
+#@ end
+    healthcheck:
+      test: [ "CMD", "nc" ,"-z", "localhost", "1080" ]
+      timeout: 20s
+      retries: 10
+    environment:
+      MOCKSERVER_ENABLE_CORS_FOR_ALL_RESPONSES: 'true'
+      MOCKSERVER_CORS_ALLOW_ORIGIN: '*'
+      MOCKSERVER_CORS_ALLOW_METHODS: 'CONNECT,DELETE,GET,HEAD,OPTIONS,POST,PUT,PATCH,TRACE'
+      MOCKSERVER_CORS_ALLOW_HEADERS: '*'
+      MOCKSERVER_CORS_ALLOW_CREDENTIALS: 'true'
+      MOCKSERVER_CORS_MAX_AGE_IN_SECONDS: 0
+    networks:
+      default:
+        aliases:
+          - mock-server.tool.net
+

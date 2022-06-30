@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  busybox: 
+    extends: #@ busybox()
+  mockserver:
+    extends: #@ mockserver()
+

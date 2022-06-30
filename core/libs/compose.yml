@@ -1,0 +1,12 @@
+#@ def extend(name):
+file: #@ '${dev_ops_path}/envs/dev/.' + name + '.yml.tmp'
+service: #@ name
+#@ end
+
+#@ def busybox():
+#@ return extend('busybox')
+#@ end
+
+#@ def mockserver():
+#@ return extend('mockserver')
+#@ end

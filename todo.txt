@@ -1,0 +1,22 @@
+#1 main config and local config given var
+#2 docker image service set in sub repo
+#3 build in commands can run in container
+#3.1 dev test ci profile
+#4 full docker compose command
+
+
+
+
+
+
+
+
+
+
+
+
+
+profile statements
+external volumes
+
+

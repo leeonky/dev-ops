@@ -1,0 +1,47 @@
+env_command=$(basename $0)
+
+export current_env=${env_command#env-}
+
+. ${dev_ops_path}/core/main.env
+
+bin_file=$(basename "$0")
+
+env_path="${dev_ops_path}/envs/${bin_file#env-}"
+
+define_ytt_vars() {
+	for var in $main_ytt_vars
+	do
+		echo "#@ $var='$(eval "echo \$$var")'"
+	done
+}
+
+make_buildin_composes() {
+	for service_compose in $(ls "${dev_ops_path}/core/composes/")
+	do
+		( define_ytt_vars; cat "${dev_ops_path}/core/composes/${service_compose}" ) | ytt -f - > \
+			${env_path}/.${service_compose}.tmp
+	done
+}
+
+make_docker_compose() {
+	make_buildin_composes
+	( define_ytt_vars; cat "${dev_ops_path}/core/libs/compose.yml" "${env_path}/services.yml" ) | ytt -f -
+}
+
+execute() {
+	export dev_ops_path=${dev_ops_path}
+	make_docker_compose | ${DOCKER_SUDO_CMD} docker-compose -f /dev/stdin "$@"
+}
+
+if [ "${1}" = ggg ]; then
+	shift
+	times=1
+	while ! execute "$@"
+	do
+		echo "Retry $((times++)) times..."
+	done
+else
+	execute "$@"
+fi
+
+define_ytt_vars
