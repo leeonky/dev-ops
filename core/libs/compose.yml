@@ -1,5 +1,5 @@
 #@ def extend(name):
-file: #@ '${dev_ops_path}/envs/dev/.' + name + '.yml.tmp'
+file: #@ '${dev_ops_path}/envs/' + current_env + '/.' + name + '.yml.tmp'
 service: #@ name
 #@ end
 
