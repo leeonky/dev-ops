@@ -1,0 +1,71 @@
+#! /usr/bin/env sh
+# replace service with running container
+
+dev_ops_path=$(dirname $0)/../../
+
+. ${dev_ops_path}/core/main.env
+
+exec_env=$1
+
+shift 1
+
+service_name=$1
+container_name=$2
+
+if [ -z "$service_name" ]; then
+	echo "Missing service at params 1"
+	exit 1
+fi
+
+if [ -z "$container_name" ]; then
+	echo "Missing contaniner at params 2"
+	exit 1
+fi
+
+env_bin=${dev_ops_path}/bin/env-${exec_env}
+
+service_candidate=$($env_bin ps -a --services | grep $service_name)
+service_count=$( echo "$service_candidate" | wc -l )
+
+if [ -z "$service_candidate" ] || [ $service_count != 1 ]; then
+	echo "Cannot query uniq service by: $service_name, which one is target?"
+	echo "$service_candidate" | sed -e "s/^/\t/" | grep --color $service_name
+	exit 1
+else
+	service_name=$service_candidate
+fi
+
+container_candidate=$(${DOCKER_SUDO_CMD} docker ps --format '{{.Names}}' | grep $container_name)
+container_count=$( echo "$container_candidate" | wc -l )
+
+if [ -z "$container_candidate" ] || [ $container_count != 1 ]; then
+	echo "Cannot query uniq container by: $container_name, which one is target?"
+	echo "$container_candidate" | sed -e "s/^/\t/" | grep --color $container_name
+	exit 1
+else
+	container_name=$container_candidate
+fi
+
+service_container_id=$($env_bin ps -q $service_name)
+network_name=$($DOCKER_SUDO_CMD docker ps -a --filter id=$service_container_id --format '{{ json .Networks }}' | awk -F\" '{print $2}')
+
+domain_name=$($env_bin config --format json | jq ".services.${service_name}.networks.default.aliases[0]" -r)
+
+echo "Exchange: $service_name <==> $container_name\t\tnetwork: $network_name\t\tdomain: $domain_name"
+
+if $env_bin ps $service_name --status=running | grep -q $service_name; then
+	echo Stop service $service_name...
+	$env_bin stop $service_name
+	echo -n Connect $container_name to $network_name with $domain_name...
+	$DOCKER_SUDO_CMD docker network connect $network_name $container_name --alias $domain_name
+	echo " done!"
+	echo "$container_name is active"
+else
+	echo -n Disconnect $container_name from $network_name...
+	$DOCKER_SUDO_CMD docker network disconnect $network_name $container_name
+	echo " done!"
+	echo Start service $service_name
+	$env_bin up -d $service_name
+	echo "$service_name is active"
+fi
+

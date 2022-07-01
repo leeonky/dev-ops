@@ -20,8 +20,8 @@ if ! tty -s >/dev/null 2>&1; then
 	tty_flag="-T"
 fi
 
-if [ -f "${dev_ops_path}/env-${exec_env}" ]; then
-	"${dev_ops_path}/env-${exec_env}" exec $tty_flag $exec_service "${root_path}/dev-ops/core/docker-bin/cd-exec" "$target_path" "$@"
+if [ -f "${dev_ops_path}/bin/env-${exec_env}" ]; then
+	"${dev_ops_path}/bin/env-${exec_env}" exec $tty_flag $exec_service "${root_path}/dev-ops/core/docker-bin/cd-exec" "$target_path" "$@"
 else
 	echo "env-${exec_env} not exist"
 fi

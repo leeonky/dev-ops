@@ -1,0 +1,5 @@
+#! /usr/bin/env sh
+export dev_ops_path=$(realpath "$(dirname $0)/../")
+
+. "$dev_ops_path/core/libs/env"
+
