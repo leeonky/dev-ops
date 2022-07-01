@@ -27,3 +27,15 @@ service: #@ name
 #@ return extend('phpmyadmin')
 #@ end
 
+#@ def ocr():
+#@ return extend('ocr')
+#@ end
+
+#@ def selenium_chrome():
+#@ return extend('selenium-chrome')
+#@ end
+
+#@ def selenium_video():
+#@ return extend('selenium-video')
+#@ end
+

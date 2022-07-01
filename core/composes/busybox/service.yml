@@ -3,5 +3,5 @@ version: '3.4'
 services:
   busybox:
     image: busybox
-    container_name: busybox.${current_env}.${PROJECT_NAME}
+    container_name: #@ imageName('busybox')
 

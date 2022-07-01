@@ -3,7 +3,7 @@ version: '3.4'
 services:
   node15:
     image: node:15
-    container_name: nodejs.${current_env}.${PROJECT_NAME}
+    container_name: #@ imageName('nodejs15')
     volumes:
       - ${root_volume}:${root_point}
     expose:

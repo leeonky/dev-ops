@@ -1,0 +1,7 @@
+#@ def imageName(service):
+#@ return service + '.${current_env}${current_task}.${PROJECT_NAME}'
+#@ end
+
+#@ def isParellel():
+#@ return task_count>1
+#@ end

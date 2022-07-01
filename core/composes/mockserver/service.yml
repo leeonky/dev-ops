@@ -3,7 +3,7 @@ version: '3.4'
 services:
   mockserver:
     image: 'mockserver/mockserver:5.13.2'
-    container_name: mock-server.${current_env}.${PROJECT_NAME}
+    container_name: #@ imageName('mock-server')
     expose:
       - 1080
 #@ if current_env == 'test':

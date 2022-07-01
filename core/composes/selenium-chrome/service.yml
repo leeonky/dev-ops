@@ -3,13 +3,18 @@ version: '3.4'
 services:
   web-driver:
     image: selenium/standalone-chrome:4.0.0-beta-3-20210426
-    container_name: web-driver.${current_env}.${PROJECT_NAME}
+    container_name: #@ imageName('web-driver')
 #@ if/end current_env == 'test':
     ports:
       - '4444:4444'
       - '7900:7900'
     volumes:
       - ${work_dir}:${work_point}
+    environment:
+     - SCREEN_WIDTH=1920
+     - SCREEN_HEIGHT=1080
+     - SCREEN_DEPTH=24
+     - SCREEN_DPI=74
     networks:
       default:
         aliases:

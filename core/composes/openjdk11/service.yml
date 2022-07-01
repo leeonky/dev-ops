@@ -3,7 +3,7 @@ version: '3.4'
 services:
   openjdk11:
     image: openjdk:11-jdk
-    container_name: jdk.${current_env}.${PROJECT_NAME}
+    container_name: #@ imageName('jdk')
     volumes:
       - "${root_volume}:${root_point}"
       - 'gradle-user-home:/tmp/tmp-user/.gradle'

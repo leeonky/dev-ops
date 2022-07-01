@@ -19,14 +19,14 @@ make_buildin_composes() {
 	rm ${env_path}/.*.tmp
 	for service_compose in $(ls "${dev_ops_path}/core/composes/")
 	do
-		( define_ytt_vars; cat "${dev_ops_path}/core/composes/${service_compose}/service.yml" ) | ytt -f - > \
+		( define_ytt_vars; cat "${dev_ops_path}/core/libs/service.yml"; cat "${dev_ops_path}/core/composes/${service_compose}/service.yml" ) | ytt -f - > \
 			${env_path}/.${service_compose}.yml.tmp
 	done
 }
 
 make_docker_compose() {
 	make_buildin_composes
-	( define_ytt_vars; cat "${dev_ops_path}/core/libs/compose.yml" "${env_path}/services.yml" ) | ytt -f -
+	( define_ytt_vars; cat "${dev_ops_path}/core/libs/service.yml"; cat "${dev_ops_path}/core/libs/compose.yml" "${env_path}/services.yml" ) | ytt -f -
 }
 
 make_volumes() {
@@ -38,18 +38,43 @@ make_volumes() {
 	done
 }
 
-execute() {
+execute_bin() {
 	( make_docker_compose; echo 'volumes:';  make_volumes | grep -v '^volumes:' ) | ${DOCKER_SUDO_CMD} docker-compose -f /dev/stdin "$@"
 }
 
-if [ "${1}" = ggg ]; then
-	shift
-	times=1
-	while ! execute "$@"
-	do
-		echo "Retry $((times++)) times..."
-	done
-else
+is_integer() {
+	[ -n "${1}" ] && [ $(printf "%d" $1 2>/dev/null) -eq $1 2>/dev/null ] 
+}
+
+execute() {
+	if [ "${1}" = ggg ]; then
+		shift
+		times=1
+		while ! execute "$@"
+		do
+			echo "Retry $((times++)) times..."
+		done
+	elif is_integer "$1"; then
+		export current_task="$1"
+		shift 1
+		execute_bin --project-name $current_task "$@"
+	else
+		export current_task=''
+		execute_bin "$@"
+	fi
+}
+
+if [ $task_count -eq 1 ]; then
 	execute "$@"
+else
+	if is_integer $1; then
+		execute "$@"
+	else
+		for i in $(seq $TASK_COUNT)
+		do
+			execute $i "$@"
+		done
+	fi
 fi
+
 
