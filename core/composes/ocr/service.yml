@@ -7,12 +7,14 @@ services:
     container_name: #@ imageName('ocr')
     expose:
       - 8884
+#@ if not isParellel():
 #@ if/end current_env == 'dev':
     ports:
       - '8884:8884'
 #@ if/end current_env == 'test':
     ports:
       - '8884:8884'
+#@ end
     networks:
       default:
         aliases:

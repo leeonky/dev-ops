@@ -6,6 +6,14 @@ services:
     container_name: #@ imageName('phpmyadmin')
     environment:
       UPLOAD_LIMIT: 300M
+#@ if not isParellel():
+#@ if/end current_env == 'dev':
+    ports:
+      - '30000:80'
+#@ if/end current_env == 'test':
+    ports:
+      - '20000:80'
+#@ end
     links:
       - mysql:db
 

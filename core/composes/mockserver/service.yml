@@ -6,7 +6,8 @@ services:
     container_name: #@ imageName('mock-server')
     expose:
       - 1080
-#@ if current_env == 'test':
+#@ if not isParellel():
+#@ if/end current_env == 'test':
     ports:
       - "1080:1080"
 #@ end

@@ -25,7 +25,6 @@ make_buildin_composes() {
 }
 
 make_docker_compose() {
-	make_buildin_composes
 	( define_ytt_vars; cat "${dev_ops_path}/core/libs/service.yml"; cat "${dev_ops_path}/core/libs/compose.yml" "${env_path}/services.yml" ) | ytt -f -
 }
 
@@ -64,17 +63,19 @@ execute() {
 	fi
 }
 
+make_buildin_composes
+
 if [ $task_count -eq 1 ]; then
 	execute "$@"
 else
 	if is_integer $1; then
 		execute "$@"
 	else
-		for i in $(seq $TASK_COUNT)
+		for i in $(seq $task_count)
 		do
-			execute $i "$@"
+			execute $i "$@" | sed -e "s/^/Task:$i - /" &
 		done
+		wait
 	fi
 fi
-
 

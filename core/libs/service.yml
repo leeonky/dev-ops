@@ -3,5 +3,5 @@
 #@ end
 
 #@ def isParellel():
-#@ return task_count>1
+#@ return task_count != '1'
 #@ end

@@ -8,11 +8,13 @@ services:
       - ${root_volume}:${root_point}
     expose:
       - 8080
+#@ if not isParellel():
 #@ if/end current_env == 'dev':
     ports:
       - '8080:8080'
 #@ if/end current_env == 'test':
     ports:
-      - '8080:8080'
+      - '9080:8080'
+#@ end
     command: [ 'tail', '-f', '/dev/null' ]
 
