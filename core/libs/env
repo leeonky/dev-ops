@@ -38,7 +38,11 @@ make_volumes() {
 }
 
 execute_bin() {
-	( make_docker_compose; echo 'volumes:';  make_volumes | grep -v '^volumes:' ) | ${DOCKER_SUDO_CMD} docker-compose -f /dev/stdin "$@"
+	local all_volumes="$(make_volumes | grep -v '^volumes:')"
+	if [ "$all_volumes" != "" ]; then
+		all_volumes="volumes:\n$all_volumes"
+	fi
+	( make_docker_compose; echo "$all_volumes" ) | ${DOCKER_SUDO_CMD} docker-compose  --project-name ${PROJECT_NAME}_${current_env}${current_task} -f /dev/stdin "$@"
 }
 
 is_integer() {
@@ -56,7 +60,7 @@ execute() {
 	elif is_integer "$1"; then
 		export current_task="$1"
 		shift 1
-		execute_bin --project-name $current_task "$@"
+		execute_bin "$@"
 	else
 		export current_task=''
 		execute_bin "$@"
@@ -73,7 +77,7 @@ else
 	else
 		for i in $(seq $task_count)
 		do
-			execute $i "$@" | sed -e "s/^/Task:$i - /" &
+			execute $i "$@" | sed -e "s/^/${current_env}:$i > /" &
 		done
 		wait
 	fi
