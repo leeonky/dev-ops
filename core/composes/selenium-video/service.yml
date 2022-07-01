@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  web-driver:
+  selenium-video:
     image: josephyao/selenium-video-ffmpeg:v0.0.3
     container_name: #@ imageName('selenium-video')
     volumes:

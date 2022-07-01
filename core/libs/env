@@ -42,7 +42,8 @@ execute_bin() {
 	if [ "$all_volumes" != "" ]; then
 		all_volumes="volumes:\n$all_volumes"
 	fi
-	( make_docker_compose; echo "$all_volumes" ) | ${DOCKER_SUDO_CMD} docker-compose  --project-name ${PROJECT_NAME}_${current_env}${current_task} -f /dev/stdin "$@"
+	( make_docker_compose; echo "$all_volumes" ) > ${env_path}/.docker-compose.yml.tmp
+	${DOCKER_SUDO_CMD} docker-compose  --project-name ${PROJECT_NAME}_${current_env}${current_task} -f ${env_path}/.docker-compose.yml.tmp "$@"
 }
 
 is_integer() {
