@@ -15,6 +15,7 @@ services:
      - SCREEN_HEIGHT=1080
      - SCREEN_DEPTH=24
      - SCREEN_DPI=74
+    shm_size: 2gb
     networks:
       default:
         aliases:

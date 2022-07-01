@@ -42,8 +42,16 @@ execute_bin() {
 	if [ "$all_volumes" != "" ]; then
 		all_volumes="volumes:\n$all_volumes"
 	fi
-	( make_docker_compose; echo "$all_volumes" ) > ${env_path}/.docker-compose.yml.tmp
-	${DOCKER_SUDO_CMD} docker-compose  --project-name ${PROJECT_NAME}_${current_env}${current_task} -f ${env_path}/.docker-compose.yml.tmp "$@"
+
+	if make_docker_compose | grep -q '^networks:'; then
+		local default_network=''
+	else
+		local default_network="networks:\n  default:\n    name: net_${PROJECT_NAME}_${current_env}${current_task}"
+	fi
+
+	local compose_file="${env_path}/.docker-compose${current_task}.yml.tmp"
+	( make_docker_compose; echo "$all_volumes"; echo "$default_network" ) > "$compose_file"
+	${DOCKER_SUDO_CMD} docker-compose  --project-name ${PROJECT_NAME}_${current_env}${current_task} -f "$compose_file" "$@"
 }
 
 is_integer() {

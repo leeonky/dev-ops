@@ -19,6 +19,9 @@ services:
     ports:
       - "23306:3306"
 #@ end
+#@ if/end current_env == 'test':
+    tmpfs:
+      - /var/lib/mysql
     volumes:
       - "../../core/composes/mysql8/conf:/etc/mysql/conf.d"
     healthcheck:

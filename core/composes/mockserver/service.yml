@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   mockserver:
-    image: 'mockserver/mockserver:5.13.2'
+    image: 'mockserver/mockserver:5.4.1'
     container_name: #@ imageName('mock-server')
     expose:
       - 1080
