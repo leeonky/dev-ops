@@ -32,7 +32,7 @@ make_volumes() {
 	for invoked_service in $(make_docker_compose | grep 'service:' | awk '{print $2}')
 	do
 		if [ -f "${dev_ops_path}/core/composes/${invoked_service}/volume.yml" ]; then
-			cat "${dev_ops_path}/core/composes/${invoked_service}/volume.yml"
+			( define_ytt_vars; cat "${dev_ops_path}/core/libs/service.yml"; cat "${dev_ops_path}/core/composes/${invoked_service}/volume.yml" ) | ytt -f -
 		fi
 	done
 }
