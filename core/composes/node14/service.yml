@@ -4,6 +4,7 @@ services:
   node14:
     image: node:14
     container_name: #@ imageName('nodejs14')
+    user: #@ hostUser()
     volumes:
       - ${root_volume}:${root_point}
     expose:

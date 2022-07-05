@@ -4,6 +4,7 @@ services:
   openjdk17:
     image: openjdk:17-jdk
     container_name: #@ imageName('jdk17')
+    user: #@ hostUser()
     volumes:
       - "${root_volume}:${root_point}"
       - 'gradle-user-home:/tmp/tmp-user/.gradle'

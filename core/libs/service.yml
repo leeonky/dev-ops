@@ -5,3 +5,7 @@
 #@ def isParellel():
 #@ return task_count != '1'
 #@ end
+
+#@ def hostUser():
+#@ return "${CONTAINER_UID-0}:${CONTAINER_GID-0}"
+#@ end

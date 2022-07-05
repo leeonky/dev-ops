@@ -4,6 +4,7 @@ services:
   node15:
     image: node:15
     container_name: #@ imageName('nodejs15')
+    user: #@ hostUser()
     volumes:
       - ${root_volume}:${root_point}
     expose:

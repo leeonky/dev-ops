@@ -4,6 +4,7 @@ services:
   selenium-video:
     image: josephyao/selenium-video-ffmpeg:v0.0.3
     container_name: #@ imageName('selenium-video')
+    user: #@ hostUser()
     volumes:
       - ../../videos:/videos
 #@ if not isParellel():
